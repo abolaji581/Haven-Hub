@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haven Hub — Dine &amp; Stay, Egbeda Lagos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+  :root{
+    --ink:#1C1C1A;
+    --ivory:#F7F4EE;
+    --brass:#8A6D4A;
+    --gold:#B8912F;
+    --green:#3E4A3D;
+    --terracotta:#B85C38;
+    --stone:#C9C2B4;
+    --white:#FFFDF9;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--ivory);line-height:1.6;}
+  h1,h2,h3,h4,.display{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  img{width:100%;display:block;object-fit:cover;}
+  button{font-family:inherit;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* Ankara-inspired accent strip */
+  .pattern-strip{
+    height:8px;
+    background:repeating-linear-gradient(45deg, var(--terracotta) 0 10px, var(--gold) 10px 20px, var(--green) 20px 30px);
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---------- NAV ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(28,28,26,0.0);transition:background .4s ease, backdrop-filter .4s ease;}
+  header.scrolled{background:rgba(28,28,26,0.93);backdrop-filter:blur(6px);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;max-width:1180px;margin:0 auto;}
+  .brand{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--white);letter-spacing:0.02em;}
+  .brand span{color:var(--gold);}
+  .nav-links{display:flex;gap:30px;font-size:0.88rem;align-items:center;}
+  .nav-links a{color:var(--white);opacity:0.85;transition:opacity .2s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-cta{border:1px solid var(--gold);color:var(--gold) !important;padding:8px 16px;border-radius:2px;opacity:1 !important;font-size:0.82rem;}
+  .nav-toggle{display:none;background:none;border:none;color:var(--white);font-size:1.6rem;cursor:pointer;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;height:100vh;min-height:640px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--white);overflow:hidden;}
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(20,20,18,0.35) 0%, rgba(20,20,18,0.55) 55%, rgba(20,20,18,0.9) 100%),
+    url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1800&auto=format&fit=crop');
+    background-size:cover;background-position:center;
+  }
+  .hero-inner{position:relative;z-index:2;opacity:0;animation:fadeUp 1.1s ease forwards 0.2s;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+  .hero-eyebrow{font-size:0.82rem;letter-spacing:0.08em;color:var(--stone);margin-bottom:16px;}
+  .hero h1{font-size:clamp(2.4rem, 6vw, 4.6rem);font-weight:400;line-height:1.08;max-width:15ch;margin:0 auto 20px;}
+  .hero p{font-size:1.02rem;max-width:38ch;margin:0 auto 30px;color:rgba(247,244,238,0.9);}
+  .btn{display:inline-block;padding:14px 28px;font-size:0.9rem;border-radius:2px;transition:background .25s, color .25s, border-color .25s, transform .2s;cursor:pointer;border:none;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--brass);color:var(--white);border:1px solid var(--brass);}
+  .btn-primary:hover{background:var(--gold);border-color:var(--gold);}
+  .btn-outline{border:1px solid rgba(247,244,238,0.6);color:var(--white);background:none;}
+  .btn-outline:hover{background:rgba(247,244,238,0.12);}
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+
+  /* ---------- SECTION HEAD ---------- */
+  .section{padding:100px 0;}
+  .section-head{text-align:center;max-width:580px;margin:0 auto 50px;}
+  .section-head h2{font-size:clamp(1.8rem, 3.4vw, 2.5rem);font-weight:400;margin-bottom:12px;}
+  .section-head p{color:#55534d;font-size:0.98rem;}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
+  .about-grid img{border-radius:2px; height:380px;}
+  .about-text p{color:#4b4a44; margin-bottom:16px;}
+
+  /* ---------- CARD GRID (amenities/rooms shared look) ---------- */
+  .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--stone);}
+  .card-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .press-card{
+    background:var(--white);cursor:pointer;border:none;text-align:left;width:100%;
+    display:block;position:relative;overflow:hidden;transition:transform .25s ease;
+  }
+  .press-card:hover{transform:translateY(-4px);}
+  .press-card:active{transform:translateY(-1px) scale(0.99);}
+  .press-card .img-wrap{height:180px;overflow:hidden;}
+  .press-card img{height:100%;transition:transform .5s ease;}
+  .press-card:hover img{transform:scale(1.06);}
+  .press-card-body{padding:20px 20px 24px;}
+  .press-card-body h4{font-size:1.1rem;font-weight:400;margin-bottom:6px;}
+  .press-card-body p{color:#63615a;font-size:0.87rem;}
+  .press-hint{font-size:0.76rem;color:var(--brass);margin-top:10px;letter-spacing:0.02em;}
+  .badge{
+    position:absolute;top:14px;right:14px;padding:5px 12px;border-radius:20px;font-size:0.72rem;
+    background:rgba(28,28,26,0.85);color:var(--white);
+  }
+  .badge.available{background:var(--green);}
+  .badge.booked{background:var(--terracotta);}
+  .room-tier{position:absolute;top:14px;left:14px;padding:5px 12px;border-radius:20px;font-size:0.72rem;color:var(--white);}
+  .tier-gold{background:linear-gradient(135deg,#C9A227,#8A6D4A);}
+  .tier-silver{background:linear-gradient(135deg,#9AA0A6,#5b5e63);}
+  .tier-diamond{background:linear-gradient(135deg,#4F7A8B,#2c4551);}
+  .press-card-body .room-price{color:var(--brass);font-size:0.95rem;margin-bottom:8px;}
+
+  /* ---------- AMENITIES SECTION BG ---------- */
+  .amenities{background:var(--green);color:var(--ivory);}
+  .amenities .section-head h2{color:var(--white);}
+  .amenities .section-head p{color:rgba(247,244,238,0.75);}
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(15,15,13,0.85);z-index:100;
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--white);max-width:640px;width:100%;max-height:88vh;overflow-y:auto;
+    border-radius:3px;position:relative;
+  }
+  .modal-close{
+    position:absolute;top:14px;right:14px;background:rgba(28,28,26,0.7);color:var(--white);
+    width:34px;height:34px;border-radius:50%;border:none;font-size:1.1rem;cursor:pointer;z-index:2;
+  }
+  .modal-gallery{display:grid;grid-template-columns:2fr 1fr;gap:4px;}
+  .modal-gallery img{height:140px;}
+  .modal-gallery img:first-child{height:284px;grid-row:span 2;}
+  .modal-body{padding:28px;}
+  .modal-body h3{font-size:1.5rem;font-weight:400;margin-bottom:10px;}
+  .modal-body p{color:#55534d;margin-bottom:16px;}
+  .modal-price{color:var(--brass);font-size:1.05rem;margin-bottom:16px;}
+
+  /* ---------- MENU / FOOD ORDER ---------- */
+  .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--stone);}
+  .menu-food-card{background:var(--white);display:flex;gap:16px;padding:18px;}
+  .menu-food-card img{width:96px;height:96px;border-radius:2px;flex-shrink:0;}
+  .menu-food-info{flex:1;}
+  .menu-food-info h4{font-size:1.02rem;font-weight:500;margin-bottom:4px;}
+  .menu-food-info p{color:#726f66;font-size:0.83rem;margin-bottom:8px;}
+  .menu-food-price{color:var(--brass);font-size:0.92rem;margin-bottom:10px;}
+  .qty-control{display:flex;align-items:center;gap:12px;}
+  .qty-btn{
+    width:28px;height:28px;border-radius:50%;border:1px solid var(--ink);background:none;
+    font-size:1rem;cursor:pointer;line-height:1;
+  }
+  .qty-btn:hover{background:var(--ink);color:var(--white);}
+  .qty-val{min-width:16px;text-align:center;font-size:0.92rem;}
+
+  .cart-bar{
+    position:sticky;bottom:0;background:var(--ink);color:var(--white);
+    padding:16px 24px;display:flex;align-items:center;justify-content:space-between;
+    border-radius:2px;margin-top:2px;flex-wrap:wrap;gap:12px;
+  }
+  .cart-bar span{font-size:0.92rem;}
+  .cart-total{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--gold);}
+
+  /* ---------- ORDER / BOOKING FORM ---------- */
+  .dark-form-section{background:var(--ink);color:var(--ivory);}
+  .dark-form-section .section-head h2{color:var(--white);}
+  .dark-form-section .section-head p{color:rgba(247,244,238,0.7);}
+  .form-card{max-width:760px;margin:0 auto;background:#242420;border:1px solid rgba(201,194,180,0.18);border-radius:2px;padding:40px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+  .form-group{display:flex;flex-direction:column;gap:8px;}
+  .form-group.full{grid-column:1/-1;}
+  .form-group label{font-size:0.8rem;color:var(--stone);}
+  .form-group input,.form-group select,.form-group textarea{
+    background:#1C1C1A;border:1px solid rgba(201,194,180,0.3);color:var(--ivory);
+    padding:12px 14px;border-radius:2px;font-family:'Inter',sans-serif;font-size:0.9rem;
+  }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .form-group textarea{resize:vertical;min-height:70px;}
+  .pay-options{display:flex;gap:12px;flex-wrap:wrap;}
+  .pay-option{
+    flex:1;min-width:160px;border:1px solid rgba(201,194,180,0.3);padding:14px;border-radius:2px;
+    cursor:pointer;transition:border-color .2s, background .2s;
+  }
+  .pay-option.selected{border-color:var(--gold);background:rgba(184,145,47,0.12);}
+  .pay-option strong{display:block;font-size:0.88rem;margin-bottom:3px;}
+  .pay-option span{font-size:0.78rem;color:rgba(247,244,238,0.6);}
+  .submit-btn{width:100%;padding:15px;background:var(--gold);color:var(--ink);border:none;border-radius:2px;font-size:0.95rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background .2s;}
+  .submit-btn:hover{background:#d4ab48;}
+  .confirm-box{display:none;text-align:center;padding:36px;}
+  .confirm-box.show{display:block;}
+  .confirm-icon{width:54px;height:54px;border:1px solid var(--gold);border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--gold);}
+  .confirm-box h3{font-weight:400;font-size:1.4rem;margin-bottom:10px;}
+  .confirm-box p{color:rgba(247,244,238,0.75);margin-bottom:4px;}
+  .confirm-reset{margin-top:20px;font-size:0.85rem;color:var(--gold);border-bottom:1px solid var(--gold);cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;padding:0 0 2px;}
+
+  /* ---------- LOCATION ---------- */
+  .location-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+  .map-frame{border-radius:2px;overflow:hidden;border:1px solid var(--stone);}
+  .map-frame iframe{width:100%;height:360px;border:0;display:block;}
+  .surrounding-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:14px;}
+  .surrounding-strip img{height:90px;border-radius:2px;}
+  .location-details p{color:#4b4a44;margin-bottom:10px;}
+  .location-details strong{color:var(--ink);}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:#141412;color:rgba(247,244,238,0.65);padding:60px 0 0;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:40px;}
+  .footer-brand{font-family:'Fraunces',serif;color:var(--white);font-size:1.25rem;margin-bottom:12px;}
+  .footer-col h5{color:var(--white);font-weight:500;font-size:0.82rem;letter-spacing:0.03em;margin-bottom:14px;}
+  .footer-col p,.footer-col a{display:block;font-size:0.88rem;margin-bottom:9px;color:rgba(247,244,238,0.65);}
+  .footer-col a:hover{color:var(--gold);}
+  .footer-bottom{text-align:center;font-size:0.78rem;color:rgba(247,244,238,0.4);padding:22px 0;border-top:1px solid rgba(247,244,238,0.1);}
+
+  @media (max-width: 860px){
+    .nav-links{position:fixed;top:0;right:0;height:100vh;width:min(78vw,320px);background:var(--ink);flex-direction:column;padding:100px 32px;transform:translateX(100%);transition:transform .35s ease;align-items:flex-start;}
+    .nav-links.open{transform:translateX(0);}
+    .nav-toggle{display:block;}
+    .about-grid{grid-template-columns:1fr;}
+    .about-grid img{height:240px;}
+    .card-grid{grid-template-columns:1fr 1fr;}
+    .card-grid.cols-3{grid-template-columns:1fr;}
+    .menu-grid{grid-template-columns:1fr;}
+    .form-row{grid-template-columns:1fr;}
+    .location-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;gap:26px;}
+    .section{padding:64px 0;}
+    .modal-gallery{grid-template-columns:1fr;}
+    .modal-gallery img:first-child{height:200px;grid-row:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <nav>
+    <div class="brand">Haven <span>Hub</span></div>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#rooms">Rooms</a>
+      <a href="#dine">Order Food</a>
+      <a href="#location">Location</a>
+      <a href="#booking" class="nav-cta">Book Now</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+  </nav>
+</header>
+<div class="pattern-strip"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner wrap">
+    <div class="hero-eyebrow">Haven Hub · Egbeda, Lagos</div>
+    <h1>A table, a room, a place to belong</h1>
+    <p>Fine dining and considered stays in the heart of Egbeda — the pool, the rooftop, and the bar all lead back to the same warm welcome.</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn btn-primary">Book a Room</a>
+      <a href="#dine" class="btn btn-outline">Order Food</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="wrap about-grid">
+    <img class="reveal" src="https://images.unsplash.com/photo-1590073242678-70ee3fc28f8e?q=80&w=900&auto=format&fit=crop" alt="Haven Hub interior">
+    <div class="about-text reveal">
+      <h2 style="font-size:2rem;margin-bottom:16px;">Our Story</h2>
+      <!-- Placeholder copy — replace with Haven Hub's real background whenever you're ready -->
+      <p>Haven Hub began as a simple idea: a place where a good meal and a good night's sleep didn't have to happen in two different parts of town. Right here in Egbeda, what started as a small dining room has grown into a home for travelers and locals alike.</p>
+      <p>A restaurant, a hotel, and a handful of quiet spaces in between — all built around one idea: hospitality done properly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AMENITIES -->
+<section class="section amenities" id="amenities">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>On the Property</h2>
+      <p>Tap any card for a closer look at what's waiting for you.</p>
+    </div>
+  </div>
+  <div class="card-grid" id="amenityGrid"></div>
+</section>
+
+<!-- ROOMS -->
+<section class="section" id="rooms">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Rooms &amp; Suites</h2>
+      <p>Tap a room to see inside, then carry your pick straight into the booking form.</p>
+    </div>
+  </div>
+  <div class="card-grid cols-3" id="roomGrid"></div>
+</section>
+
+<!-- DINE / ORDER FOOD -->
+<section class="section" id="dine">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Order Food</h2>
+      <p>Pick your dishes — we'll have it ready for pickup, delivery, or your table.</p>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+    <div class="cart-bar">
+      <span id="cartCount">0 items selected</span>
+      <span class="cart-total" id="cartTotal">₦0</span>
+      <button class="btn btn-primary" id="placeOrderBtn" style="padding:10px 20px;">Place Order</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOD ORDER FORM -->
+<section class="section dark-form-section" id="orderForm" style="display:none;">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Complete Your Order</h2>
+      <p id="orderSummaryText"></p>
+    </div>
+    <form class="form-card" id="foodOrderForm">
+      <div class="form-row">
+        <div class="form-group"><label for="ofName">Full Name</label><input type="text" id="ofName" required></div>
+        <div class="form-group"><label for="ofPhone">Phone Number</label><input type="tel" id="ofPhone" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="ofMethod">Pickup, Delivery, or Table?</label>
+          <select id="ofMethod">
+            <option>Pickup</option>
+            <option>Delivery</option>
+            <option>Serve at my table</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="ofAddress">Delivery Address (if applicable)</label><input type="text" id="ofAddress"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Payment</label>
+          <div class="pay-options">
+            <div class="pay-option selected" data-pay="delivery" onclick="selectPay(this,'food')"><strong>Pay on Pickup/Delivery</strong><span>Cash or card when it arrives</span></div>
+            <div class="pay-option" data-pay="online" onclick="selectPay(this,'food')"><strong>Pay Online Now</strong><span>Card / Transfer / USSD via Paystack</span></div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn">Place Order</button>
+    </form>
+    <div class="confirm-box" id="foodConfirmBox">
+      <div class="confirm-icon">✓</div>
+      <h3>Order received</h3>
+      <p id="foodConfirmSummary"></p>
+      <p>We'll call you shortly to confirm.</p>
+      <button class="confirm-reset" onclick="resetFoodOrder()">Place another order</button>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="section dark-form-section" id="booking">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Book Your Stay</h2>
+      <p>Fill in your details and we'll confirm by phone or email.</p>
+    </div>
+    <form class="form-card" id="bookingForm">
+      <div class="form-row">
+        <div class="form-group"><label for="fullName">Full Name</label><input type="text" id="fullName" required></div>
+        <div class="form-group"><label for="phone">Phone Number</label><input type="tel" id="phone" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="email">Email</label><input type="email" id="email" required></div>
+        <div class="form-group"><label for="roomType">Room</label>
+          <select id="roomType" required>
+            <option value="">Select a room</option>
+            <option value="Room Diamond" data-price="50000">Room Diamond — ₦50,000/night</option>
+            <option value="Room Silver" data-price="85000">Room Silver — ₦85,000/night</option>
+            <option value="Room Gold" data-price="150000">Room Gold — ₦150,000/night</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="checkIn">Check-In</label><input type="date" id="checkIn" required></div>
+        <div class="form-group"><label for="checkOut">Check-Out</label><input type="date" id="checkOut" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="guests">Guests</label>
+          <select id="guests"><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4+ Guests</option></select>
+        </div>
+        <div class="form-group"><label for="tableToo">Restaurant Table?</label>
+          <select id="tableToo"><option>No, just the room</option><option>Yes, reserve a table too</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>Payment</label>
+          <div class="pay-options">
+            <div class="pay-option selected" data-pay="hotel" onclick="selectPay(this,'room')"><strong>Pay at Hotel</strong><span>Cash or card at check-in</span></div>
+            <div class="pay-option" data-pay="online" onclick="selectPay(this,'room')"><strong>Pay Online Now</strong><span>Card / Transfer / USSD via Paystack</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full"><label for="notes">Notes (optional)</label><textarea id="notes" placeholder="Early check-in, allergies, special occasion..."></textarea></div>
+      </div>
+      <button type="submit" class="submit-btn">Request Booking</button>
+    </form>
+    <div class="confirm-box" id="confirmBox">
+      <div class="confirm-icon">✓</div>
+      <h3>Request received</h3>
+      <p id="confirmSummary"></p>
+      <p>We'll reach out at the phone or email you provided to confirm.</p>
+      <button class="confirm-reset" id="confirmReset">Book another stay</button>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section class="section" id="location" style="background:#EFEAE0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Find Us</h2>
+      <p>Right in Egbeda, Lagos.</p>
+    </div>
+    <div class="location-grid">
+      <div class="map-frame reveal">
+        <iframe src="https://maps.google.com/maps?q=Egbeda%2C%20Lagos%2C%20Nigeria&t=&z=14&ie=UTF8&iwloc=&output=embed" loading="lazy" allowfullscreen></iframe>
+      </div>
+      <div class="location-details reveal">
+        <p><strong>Address</strong><br>No. 5, Egbeda, Lagos, Nigeria</p>
+        <p><strong>Phone</strong><br>0706 769 5412</p>
+        <p><strong>Around Haven Hub</strong><br>Minutes from Egbeda's markets and main road, with easy access across Lagos.</p>
+        <div class="surrounding-strip">
+          <img src="https://images.unsplash.com/photo-1618828665347-baf3d1912873?q=80&w=400&auto=format&fit=crop" alt="Lagos street">
+          <img src="https://images.unsplash.com/photo-1580746738099-79d0028e3e6f?q=80&w=400&auto=format&fit=crop" alt="Lagos market">
+          <img src="https://images.unsplash.com/photo-1618828665011-0abd973f7bc7?q=80&w=400&auto=format&fit=crop" alt="Lagos neighborhood">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Haven <span style="color:var(--gold);">Hub</span></div>
+        <p>A restaurant and hotel under one roof in Egbeda, Lagos — dine, stay, and everything in between.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="tel:07067695412">0706 769 5412</a>
+        <a href="https://www.havenhub.com" target="_blank" rel="noopener">www.havenhub.com</a>
+        <p>No. 5, Egbeda, Lagos</p>
+      </div>
+      <div class="footer-col">
+        <h5>Explore</h5>
+        <a href="#amenities">Amenities</a>
+        <a href="#rooms">Rooms</a>
+        <a href="#dine">Order Food</a>
+        <a href="#booking">Book Now</a>
+      </div>
+    </div>
+  </div>
+  <div class="pattern-strip"></div>
+  <div class="footer-bottom">© 2026 Haven Hub, Egbeda Lagos. All rights reserved.</div>
+</footer>
+
+<!-- MODAL (shared) -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============ CONFIG ============ */
+// Formspree — receives bookings & food orders by email
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/myeyqpyl';
+// Paystack — replace with YOUR real public key from https://dashboard.paystack.com/#/settings/developer
+const PAYSTACK_PUBLIC_KEY = 'pk_test_replace_with_your_key';
+
+/* ============ DATA ============ */
+const amenities = [
+  {
+    name:'Swimming Pool',
+    thumb:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1600021458526-ec1729e5c3fc?q=80&w=500&auto=format&fit=crop'],
+    desc:'Open daily, 6am – 9pm, with loungers and towel service. A quiet lane in the mornings, a lively spot by afternoon.'
+  },
+  {
+    name:'Rooftop Lounge',
+    thumb:'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=500&auto=format&fit=crop'],
+    desc:'Sunset seating, music from 5pm, and a view across Egbeda as the city lights come on.'
+  },
+  {
+    name:'The Bar',
+    thumb:'https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1470158499416-75be9aa0c4db?q=80&w=500&auto=format&fit=crop'],
+    desc:'A short, well-made cocktail list and a longer one of local and imported drinks.'
+  },
+  {
+    name:'The Surprise Place',
+    thumb:'https://images.unsplash.com/photo-1517840901100-8179e982acb7?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1517840901100-8179e982acb7?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?q=80&w=500&auto=format&fit=crop'],
+    desc:'A guest-only space on property we like to keep a little mysterious. The photos here are just a taste — ask at check-in to see the rest.'
+  }
+];
+
+const rooms = [
+  {
+    name:'Room Diamond', tier:'diamond', tierLabel:'Diamond', price:50000, available:true,
+    thumb:'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1560185127-6ed189bf02f4?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=500&auto=format&fit=crop'],
+    desc:'A quiet, well-lit room with a queen bed — simple comfort for a short stay.'
+  },
+  {
+    name:'Room Silver', tier:'silver', tierLabel:'Silver', price:85000, available:false,
+    thumb:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1584622781564-1d987f7333c1?q=80&w=500&auto=format&fit=crop'],
+    desc:'More space, a reading corner, and a window seat looking over the courtyard.'
+  },
+  {
+    name:'Room Gold', tier:'gold', tierLabel:'Gold', price:150000, available:true,
+    thumb:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=700&auto=format&fit=crop',
+    gallery:['https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=700&auto=format&fit=crop','https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=500&auto=format&fit=crop','https://images.unsplash.com/photo-1590073242678-70ee3fc28f8e?q=80&w=500&auto=format&fit=crop'],
+    desc:'Our top room, with direct access to the rooftop lounge and pool deck.'
+  }
+];
+
+const menu = [
+  {id:'soup', name:'Charred Corn & Pepper Soup', desc:'Smoked scotch bonnet, crème fraîche', price:4500, img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=300&auto=format&fit=crop'},
+  {id:'prawns', name:'Grilled Prawns', desc:'Garlic butter, calamansi, chili oil', price:7000, img:'https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=300&auto=format&fit=crop'},
+  {id:'oxtail', name:'Slow-Braised Oxtail', desc:'Jollof rice, fried plantain, herb oil', price:13500, img:'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=300&auto=format&fit=crop'},
+  {id:'catfish', name:'Pan-Seared Catfish', desc:'Coconut pepper sauce, steamed greens', price:11000, img:'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=300&auto=format&fit=crop'},
+  {id:'suya', name:'Beef Suya Platter', desc:'Yaji spice, onions, fresh pepper', price:9500, img:'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=300&auto=format&fit=crop'},
+  {id:'jollof', name:'Party Jollof Rice', desc:'Smoky party-style, fried chicken', price:8000, img:'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?q=80&w=300&auto=format&fit=crop'},
+  {id:'peppersoup', name:'Goat Meat Pepper Soup', desc:'Uziza leaf, scent leaf, scotch bonnet', price:8500, img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=300&auto=format&fit=crop'},
+  {id:'chinchin', name:'Chin Chin Ice Cream', desc:'Vanilla bean, candied ginger', price:3500, img:'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?q=80&w=300&auto=format&fit=crop'}
+];
+
+/* ============ RENDER: AMENITIES ============ */
+const amenityGrid = document.getElementById('amenityGrid');
+amenities.forEach((a,i) => {
+  const el = document.createElement('button');
+  el.className = 'press-card reveal';
+  el.innerHTML = `
+    <div class="img-wrap"><img src="${a.thumb}" alt="${a.name}"></div>
+    <div class="press-card-body">
+      <h4>${a.name}</h4>
+      <p>${a.desc.slice(0,50)}...</p>
+      <div class="press-hint">Tap to view →</div>
+    </div>`;
+  el.style.background = '#242e24';
+  el.style.color = '#F7F4EE';
+  el.addEventListener('click', () => openAmenityModal(a));
+  amenityGrid.appendChild(el);
+});
+
+/* ============ RENDER: ROOMS ============ */
+const roomGrid = document.getElementById('roomGrid');
+rooms.forEach(r => {
+  const el = document.createElement('button');
+  el.className = 'press-card reveal';
+  el.innerHTML = `
+    <div class="img-wrap" style="position:relative;">
+      <img src="${r.thumb}" alt="${r.name}">
+      <div class="room-tier tier-${r.tier}">${r.tierLabel}</div>
+      <div class="badge ${r.available ? 'available':'booked'}">${r.available ? 'Available':'Fully Booked'}</div>
+    </div>
+    <div class="press-card-body">
+      <h4>${r.name}</h4>
+      <div class="room-price">₦${r.price.toLocaleString()} / night</div>
+      <p>${r.desc}</p>
+      <div class="press-hint">Tap to see inside →</div>
+    </div>`;
+  el.addEventListener('click', () => openRoomModal(r));
+  roomGrid.appendChild(el);
+});
+
+/* ============ RENDER: MENU / CART ============ */
+const menuGrid = document.getElementById('menuGrid');
+const cart = {};
+menu.forEach(item => {
+  cart[item.id] = 0;
+  const el = document.createElement('div');
+  el.className = 'menu-food-card reveal';
+  el.innerHTML = `
+    <img src="${item.img}" alt="${item.name}">
+    <div class="menu-food-info">
+      <h4>${item.name}</h4>
+      <p>${item.desc}</p>
+      <div class="menu-food-price">₦${item.price.toLocaleString()}</div>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+        <span class="qty-val" id="qty-${item.id}">0</span>
+        <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+      </div>
+    </div>`;
+  menuGrid.appendChild(el);
+});
+
+function changeQty(id, delta){
+  cart[id] = Math.max(0, cart[id] + delta);
+  document.getElementById('qty-'+id).textContent = cart[id];
+  updateCartBar();
+}
+
+function updateCartBar(){
+  let count = 0, total = 0;
+  menu.forEach(item => { count += cart[item.id]; total += cart[item.id]*item.price; });
+  document.getElementById('cartCount').textContent = count + ' item' + (count===1?'':'s') + ' selected';
+  document.getElementById('cartTotal').textContent = '₦' + total.toLocaleString();
+}
+
+document.getElementById('placeOrderBtn').addEventListener('click', () => {
+  const items = menu.filter(i => cart[i.id] > 0);
+  if(items.length === 0){ alert('Pick at least one item first.'); return; }
+  const orderForm = document.getElementById('orderForm');
+  orderForm.style.display = 'block';
+  const total = items.reduce((s,i)=>s+i.price*cart[i.id],0);
+  document.getElementById('orderSummaryText').textContent =
+    items.map(i => `${cart[i.id]}x ${i.name}`).join(', ') + ` — Total ₦${total.toLocaleString()}`;
+  orderForm.scrollIntoView({behavior:'smooth'});
+});
+
+/* ============ MODAL LOGIC ============ */
+const modalOverlay = document.getElementById('modalOverlay');
+const modalContent = document.getElementById('modalContent');
+
+function openAmenityModal(a){
+  modalContent.innerHTML = `
+    <div class="modal-gallery">
+      <img src="${a.gallery[0]}" alt="${a.name}">
+      <img src="${a.gallery[1]}" alt="${a.name}">
+      <img src="${a.gallery[2]}" alt="${a.name}">
+    </div>
+    <div class="modal-body">
+      <h3>${a.name}</h3>
+      <p>${a.desc}</p>
+    </div>`;
+  modalOverlay.classList.add('open');
+}
+
+function openRoomModal(r){
+  modalContent.innerHTML = `
+    <div class="modal-gallery">
+      <img src="${r.gallery[0]}" alt="${r.name}">
+      <img src="${r.gallery[1]}" alt="${r.name}">
+      <img src="${r.gallery[2]}" alt="${r.name}">
+    </div>
+    <div class="modal-body">
+      <h3>${r.name} <span style="font-size:0.9rem;color:var(--brass);">(${r.tierLabel})</span></h3>
+      <div class="modal-price">₦${r.price.toLocaleString()} / night — ${r.available ? 'Available' : 'Fully Booked'}</div>
+      <p>${r.desc}</p>
+      <button class="btn btn-primary" onclick="pickRoomFromModal('${r.name}')" ${r.available ? '' : 'disabled style="opacity:0.5;cursor:not-allowed;"'}>${r.available ? 'Select This Room' : 'Currently Unavailable'}</button>
+    </div>`;
+  modalOverlay.classList.add('open');
+}
+
+function pickRoomFromModal(name){
+  document.getElementById('roomType').value = name;
+  closeModal();
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+}
+
+function closeModal(){ modalOverlay.classList.remove('open'); }
+modalOverlay.addEventListener('click', e => { if(e.target === modalOverlay) closeModal(); });
+
+/* ============ NAV ============ */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 40));
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+/* ============ SCROLL REVEAL ============ */
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('in'); revealObserver.unobserve(entry.target); } });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+// re-observe dynamically added cards
+document.querySelectorAll('.press-card.reveal, .menu-food-card.reveal').forEach(el => revealObserver.observe(el));
+
+/* ============ PAYMENT OPTION TOGGLES ============ */
+let roomPayMethod = 'hotel';
+let foodPayMethod = 'delivery';
+function selectPay(el, context){
+  el.parentElement.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if(context === 'room') roomPayMethod = el.dataset.pay;
+  else foodPayMethod = el.dataset.pay;
+}
+
+function payWithPaystack(email, amountNaira, onSuccess){
+  if(!window.PaystackPop || PAYSTACK_PUBLIC_KEY.indexOf('replace_with') !== -1){
+    alert('Online payment isn\'t fully set up yet — please choose "Pay at Hotel / Pay on Delivery" for now.');
+    return;
+  }
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: email,
+    amount: amountNaira * 100,
+    currency: 'NGN',
+    ref: 'HH' + Date.now(),
+    callback: function(response){ onSuccess(response.reference); },
+    onClose: function(){}
+  });
+  handler.openIframe();
+}
+
+/* ============ BOOKING FORM SUBMIT ============ */
+const bookingForm = document.getElementById('bookingForm');
+const confirmBox = document.getElementById('confirmBox');
+const confirmSummary = document.getElementById('confirmSummary');
+
+function submitBooking(paymentRef){
+  const name = document.getElementById('fullName').value;
+  const room = document.getElementById('roomType').value;
+  const checkIn = document.getElementById('checkIn').value;
+  const checkOut = document.getElementById('checkOut').value;
+
+  const payload = {
+    formType: 'Room Booking',
+    fullName: name,
+    phone: document.getElementById('phone').value,
+    email: document.getElementById('email').value,
+    roomType: room,
+    checkIn, checkOut,
+    guests: document.getElementById('guests').value,
+    tableReservation: document.getElementById('tableToo').value,
+    paymentMethod: roomPayMethod === 'online' ? 'Paid Online (Paystack)' : 'Pay at Hotel',
+    paymentReference: paymentRef || 'N/A',
+    notes: document.getElementById('notes').value,
+    _subject: `New Haven Hub Room Booking — ${name}`
+  };
+
+  fetch(FORMSPREE_ENDPOINT, {
+    method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)
+  }).then(res => {
+    if(!res.ok) throw new Error('failed');
+    confirmSummary.textContent = `${name}, your ${room} is requested from ${checkIn} to ${checkOut}.`;
+    bookingForm.style.display = 'none';
+    confirmBox.classList.add('show');
+  }).catch(() => alert('Something went wrong. Please call 0706 769 5412.'));
+}
+
+bookingForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const price = document.getElementById('roomType').selectedOptions[0]?.dataset.price || 0;
+  if(roomPayMethod === 'online'){
+    payWithPaystack(email, Number(price), (ref) => submitBooking(ref));
+  } else {
+    submitBooking(null);
+  }
+});
+
+document.getElementById('confirmReset').addEventListener('click', () => {
+  bookingForm.reset(); bookingForm.style.display = 'block'; confirmBox.classList.remove('show');
+});
+
+/* ============ FOOD ORDER FORM SUBMIT ============ */
+const foodOrderForm = document.getElementById('foodOrderForm');
+const foodConfirmBox = document.getElementById('foodConfirmBox');
+
+function submitFoodOrder(paymentRef){
+  const items = menu.filter(i => cart[i.id] > 0);
+  const total = items.reduce((s,i)=>s+i.price*cart[i.id],0);
+  const itemList = items.map(i => `${cart[i.id]}x ${i.name} (₦${(i.price*cart[i.id]).toLocaleString()})`).join('; ');
+  const name = document.getElementById('ofName').value;
+
+  const payload = {
+    formType: 'Food Order',
+    fullName: name,
+    phone: document.getElementById('ofPhone').value,
+    method: document.getElementById('ofMethod').value,
+    deliveryAddress: document.getElementById('ofAddress').value,
+    items: itemList,
+    total: '₦' + total.toLocaleString(),
+    paymentMethod: foodPayMethod === 'online' ? 'Paid Online (Paystack)' : 'Pay on Pickup/Delivery',
+    paymentReference: paymentRef || 'N/A',
+    _subject: `New Haven Hub Food Order — ${name}`
+  };
+
+  fetch(FORMSPREE_ENDPOINT, {
+    method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)
+  }).then(res => {
+    if(!res.ok) throw new Error('failed');
+    document.getElementById('foodConfirmSummary').textContent = `${name}, your order (${itemList}) — Total ₦${total.toLocaleString()} has been received.`;
+    foodOrderForm.style.display = 'none';
+    foodConfirmBox.classList.add('show');
+  }).catch(() => alert('Something went wrong. Please call 0706 769 5412.'));
+}
+
+foodOrderForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const items = menu.filter(i => cart[i.id] > 0);
+  const total = items.reduce((s,i)=>s+i.price*cart[i.id],0);
+  if(foodPayMethod === 'online'){
+    payWithPaystack('order@havenhub.com', total, (ref) => submitFoodOrder(ref));
+  } else {
+    submitFoodOrder(null);
+  }
+});
+
+function resetFoodOrder(){
+  foodOrderForm.reset();
+  foodOrderForm.style.display = 'block';
+  document.getElementById('foodConfirmBox').classList.remove('show');
+  document.getElementById('orderForm').style.display = 'none';
+  menu.forEach(item => { cart[item.id] = 0; document.getElementById('qty-'+item.id).textContent = 0; });
+  updateCartBar();
+}
+</script>
+
+</body>
+</html>
