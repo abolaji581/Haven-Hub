@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haven Hub | Admin Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f7f4ee;color:#241f1a}
+.adminLink{margin-left:10px}.adminOverlay{display:none;position:fixed;inset:0;background:#f7f4ee;z-index:100;overflow:auto}.adminOverlay.show{display:block}.adminTop{background:#241f1a;color:#fff;padding:16px 4%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:2}.adminTop button{background:#a57443;color:#fff;border:0;padding:10px 15px;border-radius:6px;font-weight:800}.adminWrap{width:92%;max-width:1200px;margin:28px auto}.adminGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.adminStat{background:#fff;border:1px solid #e2d9cd;border-radius:10px;padding:18px}.adminStat b{font-size:27px;display:block;margin-top:5px}.adminTabs{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0}.adminTab{border:1px solid #d7cec1;background:#fff;padding:10px 14px;border-radius:6px;font-weight:800}.adminTab.on{background:#241f1a;color:#fff}.adminPanel{background:#fff;border:1px solid #e2d9cd;border-radius:10px;overflow:auto}.adminTable{width:100%;border-collapse:collapse;min-width:800px}.adminTable th,.adminTable td{padding:13px;border-bottom:1px solid #eee;text-align:left;font-size:13px}.adminTable th{background:#f1ece4}.status{padding:5px 8px;border-radius:20px;background:#eee9e1;font-size:11px;font-weight:800}.emptyAdmin{padding:35px;text-align:center;color:#70685e}.adminNotice{background:#f1ece4;padding:13px;border-radius:8px;margin-bottom:18px;font-size:13px}@media(max-width:800px){.adminGrid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.adminGrid{grid-template-columns:1fr}.adminTop h2{font-size:18px}}
+
+</style></head><body>
+
+  <div class="adminTop"><h2>Haven Hub Admin Dashboard</h2><button onclick="closeAdmin()">← Customer Site</button></div>
+  <div class="adminWrap">
+    <div class="adminNotice"><b>Demo dashboard:</b> This is the company/staff view for the mock-up. Orders and bookings created on this browser are stored locally on this device. A real multi-staff dashboard will need a database/backend.</div>
+    <div class="adminGrid" id="adminStats"></div>
+    <div class="adminTabs">
+      <button class="adminTab on" onclick="adminTab('bookings',this)">Bookings</button>
+      <button class="adminTab" onclick="adminTab('food',this)">Food Orders</button>
+      <button class="adminTab" onclick="adminTab('customers',this)">Customers</button>
+      <button class="adminTab" onclick="adminTab('payments',this)">Payments</button>
+    </div>
+    <div class="adminPanel" id="adminPanel"></div>
+  </div>
+</div>
+<div class="modal" id="roomModal"><div class="box"><button class="close" onclick="closeM('roomModal')">×</button><div class="tag">Room selection</div><h2 id="roomTitle"></h2><div class="price" id="roomPrice"></div><p class="muted">Choose your preferred room number.</p><div class="roomnums" id="roomNums"></div><div class="detail" id="detail">Select a room number to see its features.</div><button class="btn" id="reserve" disabled onclick="reserve()">Reserve this room</button></div><div class="modal" id="cartModal"><div class="box"><button class="close" onclick="closeM('cartModal')">×</button><div class="tag">Restaurant</div><h2>Your food cart</h2><div id="cartItems"></div><div class="total">Total: ₦<span id="total">0</span></div><div class="fields"><div><label>Name</label><input id="oname"></div><div><label>Phone</label><input id="ophone"></div><div class="full"><label>Room / Table</label><input id="oroom" placeholder="e.g. Gold Room 12"></div></div>
+<div style="margin-top:16px">
+<label>Payment Method</label>
+<div class="paymentMethods">
+<div class="paymentOption"><input type="radio" id="fpCard" name="food_payment_choice" value="Card" checked><label class="paymentLabel" for="fpCard">💳 Card</label></div>
+<div class="paymentOption"><input type="radio" id="fpTransfer" name="food_payment_choice" value="Bank Transfer"><label class="paymentLabel" for="fpTransfer">🏦 Bank Transfer</label></div>
+<div class="paymentOption"><input type="radio" id="fpUssd" name="food_payment_choice" value="USSD"><label class="paymentLabel" for="fpUssd">📱 USSD</label></div>
+<div class="paymentOption"><input type="radio" id="fpBank" name="food_payment_choice" value="Pay with Bank"><label class="paymentLabel" for="fpBank">🏦 Pay with Bank</label></div>
+</div></div>
+<button class="btn" style="width:100%" onclick="payForFood()">Continue to Payment</button><p style="font-size:12px;color:#70685e;margin-top:10px">Demo payment only — no money will be charged.</p></div></div>
+
+<div class="modal" id="paymentModal">
+<div class="box">
+<button class="close" onclick="closeM('paymentModal')">×</button>
+<div class="tag">Haven Hub Payment</div>
+<h2>Complete Payment</h2>
+<p id="paymentSummary" class="muted"></p>
+<div class="paymentDemo"><b>Demo / Mock-up</b><br>No real money will be charged. In the live version, the selected method will open the secure payment gateway.</div>
+<button class="btn" style="width:100%" onclick="completeDemoPayment()">Complete Demo Payment</button>
+</div>
+</div>
+<script>
+function openAdmin(){document.getElementById("adminOverlay").classList.add("show");renderAdmin("bookings")}
+function closeAdmin(){document.getElementById("adminOverlay").classList.remove("show")}
+function adminData(){return{bookings:JSON.parse(localStorage.getItem("havenBookings")||"[]"),food:JSON.parse(localStorage.getItem("havenFoodOrders")||"[]")}}
+function renderAdmin(tab){let d=adminData(),rev=d.bookings.reduce((a,x)=>a+(x.total||0),0)+d.food.reduce((a,x)=>a+(x.total||0),0);document.getElementById("adminStats").innerHTML=`<div class="adminStat">Bookings<b>${d.bookings.length}</b></div><div class="adminStat">Food Orders<b>${d.food.length}</b></div><div class="adminStat">Customers<b>${new Set([...d.bookings,...d.food].map(x=>x.phone).filter(Boolean)).size}</b></div><div class="adminStat">Demo Revenue<b>₦${money(rev+"")}</b></div>`;let p=document.getElementById("adminPanel");if(tab==="bookings"){p.innerHTML=d.bookings.length?`<table class="adminTable"><tr><th>ID</th><th>Customer</th><th>Room</th><th>Dates</th><th>Guests</th><th>Payment</th><th>Total</th><th>Status</th></tr>${d.bookings.map(x=>`<tr><td>${x.id}</td><td><b>${x.name}</b><br>${x.phone}<br>${x.email||""}</td><td>${x.category} ${x.room}</td><td>${x.checkin}<br>${x.checkout}<br>${x.nights} night(s)</td><td>${x.guests}</td><td>${x.payment}</td><td>₦${money(x.total+"")}</td><td><span class="status">${x.status}</span></td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No room bookings yet.</div>'}else if(tab==="food"){p.innerHTML=d.food.length?`<table class="adminTable"><tr><th>ID</th><th>Customer</th><th>Items</th><th>Room/Table</th><th>Payment</th><th>Total</th><th>Status</th></tr>${d.food.map(x=>`<tr><td>${x.id}</td><td><b>${x.name}</b><br>${x.phone}</td><td>${x.items.map(i=>`${i.name} × ${i.qty}`).join("<br>")}</td><td>${x.room||"Not provided"}</td><td>${x.payment}</td><td>₦${money(x.total+"")}</td><td><span class="status">${x.status}</span></td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No food orders yet.</div>'}else if(tab==="customers"){let all=[...d.bookings,...d.food],map={};all.forEach(x=>{if(x.phone)map[x.phone]=x});let c=Object.values(map);p.innerHTML=c.length?`<table class="adminTable"><tr><th>Customer</th><th>Phone</th><th>Email</th><th>Latest Activity</th></tr>${c.map(x=>`<tr><td>${x.name||"—"}</td><td>${x.phone||"—"}</td><td>${x.email||"—"}</td><td>${x.category?`Room booking: ${x.category} ${x.room}`:"Food order"}</td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No customers yet.</div>'}else{let all=[...d.bookings.map(x=>({...x,type:"Room Booking"})),...d.food.map(x=>({...x,type:"Food Order"}))].sort((a,b)=>b.id.localeCompare(a.id));p.innerHTML=all.length?`<table class="adminTable"><tr><th>Type</th><th>ID</th><th>Customer</th><th>Method</th><th>Amount</th><th>Status</th></tr>${all.map(x=>`<tr><td>${x.type}</td><td>${x.id}</td><td>${x.name}</td><td>${x.payment}</td><td>₦${money(x.total+"")}</td><td><span class="status">${x.status}</span></td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No payments yet.</div>'}}
+function adminTab(tab,btn){document.querySelectorAll(".adminTab").forEach(x=>x.classList.remove("on"));btn.classList.add("on");renderAdmin(tab)}
+renderAdmin("bookings");
+</script></body></html>
