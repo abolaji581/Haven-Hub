@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haven Hub | Admin Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f7f4ee;color:#241f1a}
+.adminLink{margin-left:10px}.adminOverlay{display:none;position:fixed;inset:0;background:#f7f4ee;z-index:100;overflow:auto}.adminOverlay.show{display:block}.adminTop{background:#241f1a;color:#fff;padding:16px 4%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:2}.adminTop button{background:#a57443;color:#fff;border:0;padding:10px 15px;border-radius:6px;font-weight:800}.adminWrap{width:92%;max-width:1200px;margin:28px auto}.adminGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.adminStat{background:#fff;border:1px solid #e2d9cd;border-radius:10px;padding:18px}.adminStat b{font-size:27px;display:block;margin-top:5px}.adminTabs{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0}.adminTab{border:1px solid #d7cec1;background:#fff;padding:10px 14px;border-radius:6px;font-weight:800}.adminTab.on{background:#241f1a;color:#fff}.adminPanel{background:#fff;border:1px solid #e2d9cd;border-radius:10px;overflow:auto}.adminTable{width:100%;border-collapse:collapse;min-width:800px}.adminTable th,.adminTable td{padding:13px;border-bottom:1px solid #eee;text-align:left;font-size:13px}.adminTable th{background:#f1ece4}.status{padding:5px 8px;border-radius:20px;background:#eee9e1;font-size:11px;font-weight:800}.emptyAdmin{padding:35px;text-align:center;color:#70685e}.adminNotice{background:#f1ece4;padding:13px;border-radius:8px;margin-bottom:18px;font-size:13px}@media(max-width:800px){.adminGrid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.adminGrid{grid-template-columns:1fr}.adminTop h2{font-size:18px}}
+.loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.loginBox{background:#fff;border:1px solid #e2d9cd;border-radius:12px;padding:30px;width:100%;max-width:360px}.loginBox h2{margin-top:0}.loginBox label{display:block;font-size:12px;font-weight:800;margin:14px 0 5px}.loginBox input{width:100%;padding:11px;border:1px solid #d7cec1;border-radius:6px;box-sizing:border-box}.loginBox button{width:100%;margin-top:20px;background:#a57443;color:#fff;border:0;padding:12px;border-radius:6px;font-weight:800}.loginError{color:#b23b3b;font-size:13px;margin-top:12px;min-height:16px}
+
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAs8PtptHzqdoTpKpoH2ijueZgBwO2P8ew",
+  authDomain: "haven-hub-213da.firebaseapp.com",
+  projectId: "haven-hub-213da",
+  storageBucket: "haven-hub-213da.firebasestorage.app",
+  messagingSenderId: "681745601391",
+  appId: "1:681745601391:web:7a54cbf08547656b798e9a",
+  measurementId: "G-B9K5VEXTV1"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+</script>
+</head><body>
+
+<div class="loginScreen" id="loginScreen">
+  <div class="loginBox">
+    <h2>Staff Login</h2>
+    <p class="muted" style="color:#70685e;font-size:13px">Sign in to view Haven Hub bookings and orders.</p>
+    <label>Email</label>
+    <input type="email" id="loginEmail" autocomplete="username">
+    <label>Password</label>
+    <input type="password" id="loginPassword" autocomplete="current-password">
+    <button onclick="login()">Log In</button>
+    <div class="loginError" id="loginError"></div>
+  </div>
+</div>
+
+  <div id="dashboardScreen" style="display:none">
+  <div class="adminTop"><h2>Haven Hub Admin Dashboard</h2><div style="display:flex;gap:8px"><button onclick="logout()">Log Out</button><button onclick="closeAdmin()">← Customer Site</button></div></div>
+  <div class="adminWrap">
+    <div class="adminNotice"><b>Live dashboard:</b> This shows real bookings and food orders placed by customers on any device, synced through Firebase.</div>
+    <div class="adminGrid" id="adminStats"></div>
+    <div class="adminTabs">
+      <button class="adminTab on" onclick="adminTab('bookings',this)">Bookings</button>
+      <button class="adminTab" onclick="adminTab('food',this)">Food Orders</button>
+      <button class="adminTab" onclick="adminTab('customers',this)">Customers</button>
+      <button class="adminTab" onclick="adminTab('payments',this)">Payments</button>
+    </div>
+    <div class="adminPanel" id="adminPanel"></div>
+  </div>
+  </div>
+
+<script>
+let bookings=[], foodOrders=[], currentTab="bookings", listenersStarted=false;
+function money(x){return Number((x+"").replace(/[^0-9]/g,"")).toLocaleString("en-NG")}
+function closeAdmin(){location.href="index.html"}
+
+function login(){
+  let email=document.getElementById("loginEmail").value.trim();
+  let pass=document.getElementById("loginPassword").value;
+  document.getElementById("loginError").textContent="";
+  auth.signInWithEmailAndPassword(email,pass).catch(err=>{
+    document.getElementById("loginError").textContent=err.message;
+  });
+}
+function logout(){auth.signOut()}
+
+auth.onAuthStateChanged(user=>{
+  if(user){
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("dashboardScreen").style.display="block";
+    if(!listenersStarted){startListeners();listenersStarted=true}
+  }else{
+    document.getElementById("loginScreen").style.display="flex";
+    document.getElementById("dashboardScreen").style.display="none";
+  }
+});
+
+function startListeners(){
+db.collection("bookings").orderBy("createdAt","desc").onSnapshot(snap=>{
+  bookings=snap.docs.map(d=>d.data());
+  renderAdmin(currentTab);
+},err=>{
+  console.error(err);
+  document.getElementById("adminPanel").innerHTML='<div class="emptyAdmin">Could not load bookings: '+err.message+'</div>';
+});
+
+db.collection("foodOrders").orderBy("createdAt","desc").onSnapshot(snap=>{
+  foodOrders=snap.docs.map(d=>d.data());
+  renderAdmin(currentTab);
+},err=>console.error(err));
+}
+
+function renderAdmin(tab){
+ currentTab=tab;
+ let d={bookings:bookings,food:foodOrders};
+ let rev=d.bookings.reduce((a,x)=>a+(x.total||0),0)+d.food.reduce((a,x)=>a+(x.total||0),0);
+ document.getElementById("adminStats").innerHTML=`<div class="adminStat">Bookings<b>${d.bookings.length}</b></div><div class="adminStat">Food Orders<b>${d.food.length}</b></div><div class="adminStat">Customers<b>${new Set([...d.bookings,...d.food].map(x=>x.phone).filter(Boolean)).size}</b></div><div class="adminStat">Revenue<b>₦${money(rev+"")}</b></div>`;
+ let p=document.getElementById("adminPanel");
+ if(tab==="bookings"){
+   p.innerHTML=d.bookings.length?`<table class="adminTable"><tr><th>ID</th><th>Customer</th><th>Room</th><th>Dates</th><th>Guests</th><th>Payment</th><th>Total</th><th>Status</th></tr>${d.bookings.map(x=>`<tr><td>${x.id}</td><td><b>${x.name}</b><br>${x.phone}<br>${x.email||""}</td><td>${x.category} ${x.room}</td><td>${x.checkin}<br>${x.checkout}<br>${x.nights} night(s)</td><td>${x.guests}</td><td>${x.payment}</td><td>₦${money(x.total+"")}</td><td><span class="status">${x.status}</span></td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No room bookings yet.</div>';
+ }else if(tab==="food"){
+   p.innerHTML=d.food.length?`<table class="adminTable"><tr><th>ID</th><th>Customer</th><th>Items</th><th>Room/Table</th><th>Payment</th><th>Total</th><th>Status</th></tr>${d.food.map(x=>`<tr><td>${x.id}</td><td><b>${x.name}</b><br>${x.phone}</td><td>${x.items.map(i=>`${i.name} × ${i.qty}`).join("<br>")}</td><td>${x.room||"Not provided"}</td><td>${x.payment}</td><td>₦${money(x.total+"")}</td><td><span class="status">${x.status}</span></td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No food orders yet.</div>';
+ }else if(tab==="customers"){
+   let all=[...d.bookings,...d.food],map={};all.forEach(x=>{if(x.phone)map[x.phone]=x});let c=Object.values(map);
+   p.innerHTML=c.length?`<table class="adminTable"><tr><th>Customer</th><th>Phone</th><th>Email</th><th>Latest Activity</th></tr>${c.map(x=>`<tr><td>${x.name||"—"}</td><td>${x.phone||"—"}</td><td>${x.email||"—"}</td><td>${x.category?`Room booking: ${x.category} ${x.room}`:"Food order"}</td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No customers yet.</div>';
+ }else{
+   let all=[...d.bookings.map(x=>({...x,type:"Room Booking"})),...d.food.map(x=>({...x,type:"Food Order"}))].sort((a,b)=>(a.id<b.id?1:-1));
+   p.innerHTML=all.length?`<table class="adminTable"><tr><th>Type</th><th>ID</th><th>Customer</th><th>Method</th><th>Amount</th><th>Status</th></tr>${all.map(x=>`<tr><td>${x.type}</td><td>${x.id}</td><td>${x.name}</td><td>${x.payment}</td><td>₦${money(x.total+"")}</td><td><span class="status">${x.status}</span></td></tr>`).join("")}</table>`:'<div class="emptyAdmin">No payments yet.</div>';
+ }
+}
+function adminTab(tab,btn){document.querySelectorAll(".adminTab").forEach(x=>x.classList.remove("on"));btn.classList.add("on");renderAdmin(tab)}
+</script>
+</body></html>
