@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haven Hub</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:"DM Sans",sans-serif;
+  background:#faf8f3;
+  color:#171715;
+  line-height:1.6;
+}
+
+img{
+  width:100%;
+  display:block;
+  object-fit:cover;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+.container{
+  width:92%;
+  max-width:1150px;
+  margin:auto;
+}
+
+/* NAVIGATION */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(250,248,243,.96);
+  border-bottom:1px solid #e5dfd4;
+  backdrop-filter:blur(10px);
+}
+
+.nav{
+  min-height:75px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-family:"Playfair Display",serif;
+  font-size:29px;
+  font-weight:700;
+}
+
+.logo span{
+  color:#b18a50;
+}
+
+.navlinks{
+  display:flex;
+  gap:24px;
+  align-items:center;
+}
+
+.navlinks a{
+  font-size:14px;
+  font-weight:600;
+}
+
+.navlinks a:hover{
+  color:#b18a50;
+}
+
+.menu{
+  display:none;
+  background:none;
+  border:0;
+  font-size:27px;
+}
+
+/* BUTTONS */
+
+.btn{
+  display:inline-block;
+  border:0;
+  border-radius:30px;
+  padding:13px 21px;
+  font-weight:700;
+  font-size:14px;
+}
+
+.dark{
+  background:#171715;
+  color:white;
+}
+
+.light{
+  background:white;
+  color:#171715;
+}
+
+.outline{
+  border:1px solid rgba(255,255,255,.7);
+  color:white;
+  background:transparent;
+}
+
+/* HERO */
+
+.hero{
+  min-height:680px;
+  display:flex;
+  align-items:center;
+  color:white;
+  background:
+  linear-gradient(90deg,rgba(0,0,0,.7),rgba(0,0,0,.2)),
+  url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=90")
+  center/cover;
+}
+
+.hero-content{
+  max-width:700px;
+  padding:100px 0;
+}
+
+.small-title{
+  text-transform:uppercase;
+  letter-spacing:3px;
+  color:#d8b979;
+  font-size:13px;
+  font-weight:700;
+}
+
+.hero h1{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(48px,8vw,85px);
+  line-height:1.05;
+  margin:18px 0;
+}
+
+.hero p{
+  font-size:18px;
+  max-width:600px;
+  color:#eee;
+}
+
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:28px;
+}
+
+/* SECTIONS */
+
+section{
+  padding:85px 0;
+}
+
+.cream{
+  background:#f1ede4;
+}
+
+.heading{
+  margin-bottom:35px;
+}
+
+.heading .small-title{
+  color:#b18a50;
+}
+
+.heading h2{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(35px,5vw,55px);
+  margin-top:8px;
+}
+
+.heading p{
+  color:#706e68;
+  max-width:600px;
+  margin-top:10px;
+}
+
+/* ABOUT */
+
+.about{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+}
+
+.about-image{
+  height:470px;
+  border-radius:24px;
+  overflow:hidden;
+}
+
+.about-text{
+  background:white;
+  border:1px solid #e4ded3;
+  border-radius:24px;
+  padding:45px;
+}
+
+.about-text h3{
+  font-family:"Playfair Display",serif;
+  font-size:35px;
+  margin-bottom:15px;
+}
+
+.about-text p{
+  color:#706e68;
+  margin-bottom:18px;
+}
+
+/* AMENITIES */
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border:1px solid #e3ddd2;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.card-image{
+  height:220px;
+}
+
+.card-content{
+  padding:22px;
+}
+
+.card h3{
+  font-family:"Playfair Display",serif;
+  font-size:25px;
+}
+
+.card p{
+  color:#706e68;
+  font-size:14px;
+  margin-top:8px;
+}
+
+/* ROOMS */
+
+.room{
+  cursor:pointer;
+  transition:.2s;
+}
+
+.room:hover{
+  transform:translateY(-5px);
+}
+
+.room-image{
+  height:260px;
+  position:relative;
+}
+
+.tag{
+  position:absolute;
+  top:15px;
+  left:15px;
+  background:white;
+  padding:7px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.room-content{
+  padding:23px;
+}
+
+.room-title{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.room h3{
+  font-family:"Playfair Display",serif;
+  font-size:27px;
+}
+
+.price{
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.room p{
+  color:#706e68;
+  margin:10px 0;
+  font-size:14px;
+}
+
+.pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:15px 0;
+}
+
+.pill{
+  border:1px solid #e2ddd3;
+  padding:6px 9px;
+  border-radius:20px;
+  font-size:11px;
+}
+
+/* PROPERTY GALLERY */
+
+.gallery{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:12px;
+}
+
+.gallery div{
+  height:200px;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.gallery div:first-child{
+  height:412px;
+  grid-row:span 2;
+}
+
+/* FOOD */
+
+.food-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.food{
+  background:white;
+  border:1px solid #e3ddd2;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.food img{
+  height:200px;
+}
+
+.food-content{
+  padding:18px;
+}
+
+.food-title{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.food h3{
+  font-size:18px;
+}
+
+.food p{
+  color:#77736b;
+  font-size:13px;
+  margin:6px 0;
+}
+
+.quantity{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:13px;
+}
+
+.quantity button{
+  width:33px;
+  height:33px;
+  border:1px solid #ddd6ca;
+  border-radius:50%;
+  background:white;
+  font-size:18px;
+}
+
+.quantity span{
+  font-weight:700;
+}
+
+.order-bar{
+  position:sticky;
+  bottom:15px;
+  z-index:20;
+  background:#171715;
+  color:white;
+  padding:15px 20px;
+  border-radius:18px;
+  margin-top:25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* BOOKING */
+
+.booking-box{
+  background:white;
+  border:1px solid #e3ddd2;
+  border-radius:24px;
+  padding:35px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid #ddd7cc;
+  border-radius:12px;
+  padding:13px;
+  font-family:inherit;
+  background:white;
+}
+
+textarea{
+  min-height:100px;
+}
+
+/* LOCATION */
+
+.location{
+  display:grid;
+  grid-template-columns:.8fr 1.2fr;
+  gap:20px;
+}
+
+.location-info{
+  background:white;
+  border:1px solid #e3ddd2;
+  border-radius:24px;
+  padding:30px;
+}
+
+.info{
+  padding:17px 0;
+  border-bottom:1px solid #e5dfd4;
+}
+
+.info:last-child{
+  border:0;
+}
+
+.info strong{
+  display:block;
+}
+
+.info span{
+  color:#706e68;
+}
+
+.map{
+  min-height:430px;
+  overflow:hidden;
+  border-radius:24px;
+}
+
+.map iframe{
+  width:100%;
+  height:100%;
+  min-height:430px;
+  border:0;
+}
+
+/* FOOTER */
+
+footer{
+  background:#171715;
+  color:white;
+  padding:55px 0 25px;
+}
+
+.footer{
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr;
+  gap:35px;
+}
+
+footer h3{
+  font-family:"Playfair Display",serif;
+  font-size:24px;
+}
+
+footer p{
+  color:#bbb7ae;
+  font-size:14px;
+  margin-top:10px;
+}
+
+.copyright{
+  border-top:1px solid #373733;
+  margin-top:35px;
+  padding-top:20px;
+  color:#88857d;
+  font-size:12px;
+}
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:200;
+  background:rgba(0,0,0,.7);
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.active{
+  display:flex;
+}
+
+.modal-box{
+  width:min(700px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#faf8f3;
+  border-radius:24px;
+  padding:25px;
+  position:relative;
+}
+
+.close{
+  position:absolute;
+  right:15px;
+  top:15px;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:#eee9df;
+  font-size:24px;
+}
+
+.modal-img{
+  height:280px;
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+
+.modal-box h2{
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+}
+
+.details{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin:20px 0;
+}
+
+.detail{
+  background:#eee9df;
+  padding:11px;
+  border-radius:10px;
+  font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .navlinks{
+    display:none;
+    position:absolute;
+    left:0;
+    right:0;
+    top:75px;
+    background:#faf8f3;
+    padding:20px 4%;
+    flex-direction:column;
+    align-items:flex-start;
+    border-bottom:1px solid #ddd7cc;
+  }
+
+  .navlinks.open{
+    display:flex;
+  }
+
+  .menu{
+    display:block;
+  }
+
+  .about,
+  .location{
+    grid-template-columns:1fr;
+  }
+
+  .cards,
+  .food-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .footer{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:560px){
+
+  section{
+    padding:65px 0;
+  }
+
+  .hero{
+    min-height:620px;
+  }
+
+  .hero h1{
+    font-size:50px;
+  }
+
+  .cards,
+  .food-grid,
+  .footer,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .about-text{
+    padding:28px;
+  }
+
+  .gallery{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .gallery div:first-child{
+    grid-column:span 2;
+    height:230px;
+  }
+
+  .gallery div{
+    height:150px;
+  }
+
+  .order-bar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .order-bar .btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+
+    <a href="#home" class="logo">
+      Haven<span>·</span>Hub
+    </a>
+
+    <button class="menu" onclick="toggleMenu()">☰</button>
+
+    <nav class="navlinks" id="navlinks">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#rooms">Rooms</a>
+      <a href="#food">Food</a>
+      <a href="#location">Location</a>
+      <a href="#booking" class="btn dark">Book Now</a>
+    </nav>
+
+  </div>
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+  <div class="container hero-content">
+
+    <div class="small-title">
+      Egbeda · Lagos · Nigeria
+    </div>
+
+    <h1>
+      A little more than a stay.
+    </h1>
+
+    <p>
+      Welcome to Haven Hub — a comfortable place to stay,
+      dine, relax and enjoy your time in Lagos.
+    </p>
+
+    <div class="buttons">
+
+      <a href="#rooms" class="btn light">
+        Explore Rooms
+      </a>
+
+      <a href="#food" class="btn outline">
+        Order Food
+      </a>
+
+      <a
+        href="https://www.google.com/maps/dir/?api=1&destination=No%205%2C%20Egbeda%2C%20Lagos%2C%20Nigeria"
+        target="_blank"
+        class="btn outline">
+        Get Directions
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section id="about">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        Welcome to Haven Hub
+      </div>
+
+      <h2>Stay. Dine. Unwind.</h2>
+
+      <p>
+        Everything you need for a comfortable stay,
+        from rooms and amenities to food and relaxation.
+      </p>
+
+    </div>
+
+
+    <div class="about">
+
+      <div class="about-image">
+
+        <img
+          src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1400&q=90"
+          alt="Hotel exterior">
+
+      </div>
+
+
+      <div class="about-text">
+
+        <h3>Your Lagos hideaway.</h3>
+
+        <p>
+          Haven Hub is built around comfort and convenience.
+          Rest in a comfortable room, enjoy good food and
+          spend time relaxing around the property.
+        </p>
+
+        <p>
+          Tap any room to see what you are booking,
+          including the bedroom, private bathroom and
+          other features.
+        </p>
+
+        <a href="#booking" class="btn dark">
+          Make a Booking
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- AMENITIES -->
+
+<section class="cream" id="amenities">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        Around the property
+      </div>
+
+      <h2>Amenities</h2>
+
+      <p>
+        Explore the spaces available around Haven Hub.
+      </p>
+
+    </div>
+
+
+    <div class="cards">
+
+      <div class="card">
+
+        <div class="card-image">
+          <img
+            src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1000&q=90"
+            alt="Swimming pool">
+        </div>
+
+        <div class="card-content">
+          <h3>Swimming Pool</h3>
+          <p>
+            Cool off and relax around the pool area.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-image">
+          <img
+            src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1000&q=90"
+            alt="Hotel compound">
+        </div>
+
+        <div class="card-content">
+          <h3>Hotel Compound</h3>
+          <p>
+            A welcoming outdoor space for guests.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-image">
+          <img
+            src="https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1000&q=90"
+            alt="Restaurant">
+        </div>
+
+        <div class="card-content">
+          <h3>Restaurant</h3>
+          <p>
+            Enjoy meals and spend time with friends and family.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-image">
+          <img
+            src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1000&q=90"
+            alt="Bar">
+        </div>
+
+        <div class="card-content">
+          <h3>Bar & Lounge</h3>
+          <p>
+            A relaxed setting for evening downtime.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-image">
+          <img
+            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=90"
+            alt="Hotel interior">
+        </div>
+
+        <div class="card-content">
+          <h3>Relaxation Areas</h3>
+          <p>
+            Comfortable spaces for conversations and quiet moments.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-image">
+          <img
+            src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=90"
+            alt="Hotel interior">
+        </div>
+
+        <div class="card-content">
+          <h3>Modern Interiors</h3>
+          <p>
+            Clean and comfortable interiors for guests.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ROOMS -->
+
+<section id="rooms">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        Choose your stay
+      </div>
+
+      <h2>Rooms & Suites</h2>
+
+      <p>
+        Tap a room to see exactly what is included in your booking.
+      </p>
+
+    </div>
+
+
+    <div class="cards">
+
+
+      <!-- DIAMOND -->
+
+      <div class="card room" onclick="showRoom('diamond')">
+
+        <div class="room-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=90"
+            alt="Diamond room">
+
+          <div class="tag">
+            ROOM
+          </div>
+
+        </div>
+
+
+        <div class="room-content">
+
+          <div class="room-title">
+
+            <h3>Diamond Room</h3>
+
+            <div class="price">
+              ₦50,000
+            </div>
+
+          </div>
+
+          <p>
+            A comfortable room for a restful stay.
+          </p>
+
+          <div class="pills">
+            <span class="pill">Bedroom</span>
+            <span class="pill">Private Bathroom</span>
+            <span class="pill">Wardrobe</span>
+            <span class="pill">A/C</span>
+          </div>
+
+          <button class="btn dark">
+            View Details
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SILVER -->
+
+      <div class="card room" onclick="showRoom('silver')">
+
+        <div class="room-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=90"
+            alt="Silver room">
+
+          <div class="tag">
+            PREMIUM ROOM
+          </div>
+
+        </div>
+
+
+        <div class="room-content">
+
+          <div class="room-title">
+
+            <h3>Silver Room</h3>
+
+            <div class="price">
+              ₦85,000
+            </div>
+
+          </div>
+
+          <p>
+            A spacious option with a polished hotel feel.
+          </p>
+
+          <div class="pills">
+            <span class="pill">Bedroom</span>
+            <span class="pill">Private Bathroom</span>
+            <span class="pill">Sitting Area</span>
+            <span class="pill">A/C</span>
+          </div>
+
+          <button class="btn dark">
+            View Details
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- GOLD -->
+
+      <div class="card room" onclick="showRoom('gold')">
+
+        <div class="room-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=90"
+            alt="Gold suite">
+
+          <div class="tag">
+            SUITE
+          </div>
+
+        </div>
+
+
+        <div class="room-content">
+
+          <div class="room-title">
+
+            <h3>Gold Suite</h3>
+
+            <div class="price">
+              ₦150,000
+            </div>
+
+          </div>
+
+          <p>
+            Extra space and comfort for a premium stay.
+          </p>
+
+          <div class="pills">
+            <span class="pill">Large Bedroom</span>
+            <span class="pill">Private Bathroom</span>
+            <span class="pill">Lounge</span>
+            <span class="pill">A/C</span>
+          </div>
+
+          <button class="btn dark">
+            View Details
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PROPERTY -->
+
+<section class="cream">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        See the space
+      </div>
+
+      <h2>The Property</h2>
+
+      <p>
+        A visual look at the type of spaces guests can enjoy.
+      </p>
+
+    </div>
+
+
+    <div class="gallery">
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1400&q=90"
+          alt="Hotel compound">
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=900&q=90"
+          alt="Swimming pool">
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=90"
+          alt="Bedroom">
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=90"
+          alt="Hotel interior">
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=900&q=90"
+          alt="Lounge">
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FOOD -->
+
+<section id="food">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        Hungry?
+      </div>
+
+      <h2>Order Food</h2>
+
+      <p>
+        Choose your food, select your quantity and place your order.
+      </p>
+
+    </div>
+
+
+    <div class="food-grid" id="foodGrid"></div>
+
+
+    <div class="order-bar">
+
+      <div>
+        <strong id="cartCount">0 items</strong>
+        <br>
+        <span id="cartTotal">Total: ₦0</span>
+      </div>
+
+      <button class="btn light" onclick="openFoodOrder()">
+        Place Food Order
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- BOOKING -->
+
+<section class="cream" id="booking">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        Reserve your room
+      </div>
+
+      <h2>Book Haven Hub</h2>
+
+      <p>
+        Send your booking request and Haven Hub can confirm availability.
+      </p>
+
+    </div>
+
+
+    <div class="booking-box">
+
+      <form
+        action="https://formspree.io/f/myeyqpyl"
+        method="POST">
+
+        <input
+          type="hidden"
+          name="form_type"
+          value="Room Booking">
+
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label>
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              name="name"
+              required>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Phone Number
+            </label>
+
+            <input
+              type="tel"
+              name="phone"
+              required>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label>
+              Email
+            </label>
+
+            <input
+              type="email"
+              name="email"
+              required>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Room
+            </label>
+
+            <select name="room" id="bookingRoom" required>
+
+              <option value="">
+                Select a room
+              </option>
+
+              <option>
+                Diamond Room — ₦50,000/night
+              </option>
+
+              <option>
+                Silver Room — ₦85,000/night
+              </option>
+
+              <option>
+                Gold Suite — ₦150,000/night
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label>
+              Check-in
+            </label>
+
+            <input
+              type="date"
+              name="check_in"
+              required>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Check-out
+            </label>
+
+            <input
+              type="date"
+              name="check_out"
+              required>
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Number of Guests
+          </label>
+
+          <input
+            type="number"
+            name="guests"
+            min="1"
+            value="1"
+            required>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Special Request
+          </label>
+
+          <textarea
+            name="special_request"
+            placeholder="Anything we should know?"></textarea>
+
+        </div>
+
+
+        <button class="btn dark" type="submit">
+          Send Booking Request
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- LOCATION -->
+
+<section id="location">
+
+  <div class="container">
+
+    <div class="heading">
+
+      <div class="small-title">
+        Find us
+      </div>
+
+      <h2>Location</h2>
+
+      <p>
+        Tap the button to open Google Maps and get directions.
+      </p>
+
+    </div>
+
+
+    <div class="location">
+
+
+      <div class="location-info">
+
+        <div class="info">
+
+          <strong>
+            Address
+          </strong>
+
+          <span>
+            No. 5, Egbeda, Lagos, Nigeria
+          </span>
+
+        </div>
+
+
+        <div class="info">
+
+          <strong>
+            Phone
+          </strong>
+
+          <span>
+            <a href="tel:07067695412">
+              0706 769 5412
+            </a>
+          </span>
+
+        </div>
+
+
+        <div class="info">
+
+          <strong>
+            Directions
+          </strong>
+
+          <span>
+            Use Google Maps for navigation.
+          </span>
+
+        </div>
+
+
+        <div class="buttons">
+
+          <a
+            class="btn dark"
+            target="_blank"
+            href="https://www.google.com/maps/dir/?api=1&destination=No%205%2C%20Egbeda%2C%20Lagos%2C%20Nigeria">
+
+            Open Google Maps
+
+          </a>
+
+
+          <a
+            class="btn"
+            style="border:1px solid #ddd7cc"
+            href="tel:07067695412">
+
+            Call Haven Hub
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="map">
+
+        <iframe
+          src="https://www.google.com/maps?q=No%205%2C%20Egbeda%2C%20Lagos%2C%20Nigeria&output=embed"
+          loading="lazy">
+        </iframe>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+  <div class="container">
+
+    <div class="footer">
+
+      <div>
+
+        <h3>
+          Haven Hub
+        </h3>
+
+        <p>
+          A comfortable place to stay,
+          dine and unwind in Egbeda, Lagos.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          Explore
+        </h3>
+
+        <p>
+          <a href="#rooms">Rooms</a>
+        </p>
+
+        <p>
+          <a href="#amenities">Amenities</a>
+        </p>
+
+        <p>
+          <a href="#food">Food</a>
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          Contact
+        </h3>
+
+        <p>
+          <a href="tel:07067695412">
+            0706 769 5412
+          </a>
+        </p>
+
+        <p>
+          No. 5, Egbeda, Lagos, Nigeria
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="copyright">
+
+      © <span id="year"></span> Haven Hub.
+      All rights reserved.
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<!-- ROOM MODAL -->
+
+<div class="modal" id="roomModal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="closeRoom()">
+      ×
+    </button>
+
+    <div class="modal-img">
+
+      <img id="modalImage" src="" alt="Room">
+
+    </div>
+
+    <div
+      class="small-title"
+      id="modalType">
+    </div>
+
+    <h2 id="modalTitle"></h2>
+
+    <p id="modalDescription"></p>
+
+    <div
+      class="details"
+      id="modalDetails">
+    </div>
+
+    <div
+      class="price"
+      id="modalPrice">
+    </div>
+
+    <br>
+
+    <button
+      class="btn dark"
+      id="modalBook"
+      onclick="bookSelectedRoom()">
+
+      Book This Room
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- FOOD MODAL -->
+
+<div class="modal" id="foodModal">
+
+  <div class="modal-box">
+
+    <button
+      class="close"
+      onclick="closeFood()">
+
+      ×
+
+    </button>
+
+    <div class="small-title">
+      Food Order
+    </div>
+
+    <h2>
+      Place your order
+    </h2>
+
+    <p id="foodSummary"></p>
+
+    <br>
+
+    <form
+      action="https://formspree.io/f/myeyqpyl"
+      method="POST">
+
+      <input
+        type="hidden"
+        name="form_type"
+        value="Food Order">
+
+      <input
+        type="hidden"
+        name="order"
+        id="orderInput">
+
+
+      <div class="field">
+
+        <label>
+          Name
+        </label>
+
+        <input
+          name="name"
+          required>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Phone Number
+        </label>
+
+        <input
+          name="phone"
+          type="tel"
+          required>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Room / Table / Location
+        </label>
+
+        <input
+          name="delivery_location"
+          placeholder="e.g. Room 204"
+          required>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Note
+        </label>
+
+        <textarea
+          name="notes"
+          placeholder="Extra pepper, no onions, etc."></textarea>
+
+      </div>
+
+
+      <button
+        class="btn dark"
+        type="submit">
+
+        Send Food Order
+
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const rooms = {
+
+  diamond:{
+    name:"Diamond Room",
+    type:"ROOM",
+    price:"₦50,000/night",
+    image:"https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=90",
+    description:"A comfortable room designed for a peaceful and convenient stay.",
+    details:[
+      "Bedroom",
+      "Private toilet & bathroom",
+      "Bed & bedding",
+      "Wardrobe",
+      "Sitting area",
+      "Air conditioning"
+    ]
+  },
+
+  silver:{
+    name:"Silver Room",
+    type:"PREMIUM ROOM",
+    price:"₦85,000/night",
+    image:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=90",
+    description:"A more spacious room with extra comfort for your stay.",
+    details:[
+      "Spacious bedroom",
+      "Private toilet & bathroom",
+      "Bed & bedding",
+      "Wardrobe",
+      "Sitting area",
+      "Air conditioning"
+    ]
+  },
+
+  gold:{
+    name:"Gold Suite",
+    type:"SUITE",
+    price:"₦150,000/night",
+    image:"https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=90",
+    description:"A premium suite with additional space for a more luxurious stay.",
+    details:[
+      "Large bedroom",
+      "Private toilet & bathroom",
+      "Lounge area",
+      "Wardrobe",
+      "Premium bedding",
+      "Air conditioning"
+    ]
+  }
+
+};
+
+
+let selectedRoom="";
+
+
+function showRoom(room){
+
+  const r=rooms[room];
+
+  selectedRoom=room;
+
+  document.getElementById("modalImage").src=r.image;
+
+  document.getElementById("modalType").textContent=r.type;
+
+  document.getElementById("modalTitle").textContent=r.name;
+
+  document.getElementById("modalDescription").textContent=r.description;
+
+  document.getElementById("modalPrice").textContent=r.price;
+
+  document.getElementById("modalDetails").innerHTML=
+    r.details.map(
+      item => `<div class="detail">✓ ${item}</div>`
+    ).join("");
+
+  document.getElementById("roomModal").classList.add("active");
+
+}
+
+
+function closeRoom(){
+
+  document.getElementById("roomModal").classList.remove("active");
+
+}
+
+
+function bookSelectedRoom(){
+
+  const r=rooms[selectedRoom];
+
+  document.getElementById("bookingRoom").value=
+    r.name+" — "+r.price;
+
+  closeRoom();
+
+  document.getElementById("booking").scrollIntoView();
+
+}
+
+
+const foods=[
+
+  {
+    name:"Jollof Rice & Chicken",
+    price:6500,
+    image:"https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=900&q=90"
+  },
+
+  {
+    name:"Fried Rice & Chicken",
+    price:6500,
+    image:"https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=900&q=90"
+  },
+
+  {
+    name:"Chicken & Chips",
+    price:7000,
+    image:"https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=900&q=90"
+  },
+
+  {
+    name:"Peppered Chicken",
+    price:6000,
+    image:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=90"
+  },
+
+  {
+    name:"Pasta",
+    price:5500,
+    image:"https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?auto=format&fit=crop&w=900&q=90"
+  },
+
+  {
+    name:"Breakfast",
+    price:5000,
+    image:"https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=90"
+  }
+
+];
+
+
+let quantities=[0,0,0,0,0,0];
+
+
+function money(number){
+
+  return "₦"+number.toLocaleString("en-NG");
+
+}
+
+
+function renderFood(){
+
+  const grid=document.getElementById("foodGrid");
+
+  grid.innerHTML="";
+
+  foods.forEach((food,index)=>{
+
+    grid.innerHTML+=`
+
+      <div class="food">
+
+        <img
+          src="${food.image}"
+          alt="${food.name}">
+
+        <div class="food-content">
+
+          <div class="food-title">
+
+            <h3>${food.name}</h3>
+
+            <strong>
+              ${money(food.price)}
+            </strong>
+
+          </div>
+
+          <p>
+            Freshly prepared food option.
+          </p>
+
+          <div class="quantity">
+
+            <button
+              onclick="changeQuantity(${index},-1)">
+              −
+            </button>
+
+            <span>
+              ${quantities[index]}
+            </span>
+
+            <button
+              onclick="changeQuantity(${index},1)">
+              +
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+
+  updateCart();
+
+}
+
+
+function changeQuantity(index,change){
+
+  quantities[index]=
+    Math.max(0,quantities[index]+change);
+
+  renderFood();
+
+}
+
+
+function updateCart(){
+
+  let count=0;
+  let total=0;
+
+  foods.forEach((food,index)=>{
+
+    count+=quantities[index];
+
+    total+=
+      quantities[index]*food.price;
+
+  });
+
+
+  document.getElementById("cartCount").textContent=
+    count+" "+(count===1?"item":"items");
+
+  document.getElementById("cartTotal").textContent=
+    "Total: "+money(total);
+
+}
+
+
+function openFoodOrder(){
+
+  let selected=[];
+  let total=0;
+
+  foods.forEach((food,index)=>{
+
+    if(quantities[index]>0){
+
+      const amount=
+        quantities[index]*food.price;
+
+      selected.push(
+        food.name+
+        " x"+quantities[index]+
+        " = "+money(amount)
+      );
+
+      total+=amount;
+
+    }
+
+  });
+
+
+  if(selected.length===0){
+
+    alert("Please select at least one food item.");
+
+    return;
+
+  }
+
+
+  const order=
+    selected.join("\n")+
+    "\nTotal: "+
+    money(total);
+
+
+  document.getElementById("foodSummary").innerText=
+    selected.join(" • ")+
+    " • Total: "+
+    money(total);
+
+  document.getElementById("orderInput").value=order;
+
+  document.getElementById("foodModal").classList.add("active");
+
+}
+
+
+function closeFood(){
+
+  document.getElementById("foodModal").classList.remove("active");
+
+}
+
+
+function toggleMenu(){
+
+  document
+    .getElementById("navlinks")
+    .classList.toggle("open");
+
+}
+
+
+document
+  .querySelectorAll(".navlinks a")
+  .forEach(link=>{
+
+    link.addEventListener("click",()=>{
+
+      document
+        .getElementById("navlinks")
+        .classList.remove("open");
+
+    });
+
+  });
+
+
+document
+  .querySelectorAll(".modal")
+  .forEach(modal=>{
+
+    modal.addEventListener("click",event=>{
+
+      if(event.target===modal){
+
+        modal.classList.remove("active");
+
+      }
+
+    });
+
+  });
+
+
+document.getElementById("year").textContent=
+  new Date().getFullYear();
+
+
+renderFood();
+
+</script>
+
+</body>
+</html>
